@@ -1,4 +1,4 @@
-
+from pyparsing import Word, alphas, Literal
 
 class Carreiras:
     def __init__(self,data_Inicio, data_Fim, numeroID, dias):
@@ -16,4 +16,18 @@ class Percursos:
         self.fim = fim
         self.viagens = []
 
+class Tempo:
+    def __init__(self,horas,minutos):
+        self.horas
+        self.minutos
 
+''' READING FILE'''
+fd = open('times.pl','r')
+buffer=fd.read()
+buffer.split('\n')
+
+'''Parsing lines'''
+
+'''Diferentes tipos de parsers'''
+firstLine = Literal('timetable') + '(' + Word(alphas) +',' + Word(alphas) + ',\n'
+for line in buffer:
