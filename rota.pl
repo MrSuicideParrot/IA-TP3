@@ -5,6 +5,10 @@
 :- use_module(library(lists)).
 
 /*consult(times).*/
+open('times.pl', read, Str).
+read_file(Str,Lines).
+close(Str).
+assert(Lines).
 
 transfer(Ho1:Min1,Ho2:Min2):-
   (Min2 - Min1) + (Ho2 - Ho1)*60 >= 40.
