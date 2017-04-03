@@ -36,7 +36,7 @@ buffer=fd.read().split('\n')
 
 '''Diferentes tipos de parsers'''
 firstLine = Literal('timetable') + Suppress('(') + Word(alphas) +Suppress(',') + Word(alphas) + Suppress(',')
-carreiraLine = Optional(Suppress('[ ')) + Word(nums+':'+nums) + Suppress('/') + Word(nums+':'+nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (Suppress('[')+OneOrMore(Word(alphas+',')^Word(alphas))+Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
+carreiraLine = Optional(Suppress('[')) + Word(nums+':'+nums) + Suppress('/') + Word(nums+':'+nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (Suppress('[')+OneOrMore(Word(alphas+',')^Word(alphas))+Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
 i = 0
 index_tempo = 0
 while not buffer == ['']:
@@ -44,7 +44,7 @@ while not buffer == ['']:
     tempo.append(Percursos(aux[1], aux[2]))
     del buffer[0]
     while not buffer[0] == '':
-        print(buffer)
+        buffer[0] = buffer[0].replace(' ','')
         aux = carreiraLine.parseString(buffer[0])
         tempo[index_tempo].viagens.append(Carreiras(*aux))
         del buffer[0]
