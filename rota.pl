@@ -29,13 +29,14 @@ route(Place1, PLace2, Day, [Flight_num/Dep_time/Arr_time]):-flight(Place1,PLace2
 route(Place1, PLace2, Day, Route):-route_r(Place1,PLace2,Day,Route,[Place1]).
 
 /*parte recursiva da função*/
+route_r(PLace2,PLace2,Day,Route,Visited).
 route_r(Place1,PLace2,Day,Route,Visited):-
   flight(Place1,Aux,Day,Flight_num,Dep_time,Arr_time),
   not member(Aux,Visited),
-  /*route_r(Aux,PLace2,Day,[Aux|Route],[Aux|Visited]),*/
   route_r(Aux,PLace2,Day,AuxRoute,[Aux|Visited]),
-  approve([Aux/PLace1/Dep_time/Arr_time],AuxRoute),
-  append([Aux/PLace1/Dep_time/Arr_time],AuxRoute,Route).
+  approve([Aux/PLace1/Dep_time/Arr_time],Route),
+  append([Aux/PLace1/Dep_time/Arr_time],Route,Route).
 
 /* ver esta função parece muito aldrabada */
+  approve([_/_/Dep_time1/Arr_time1],[]).
   approve([_/_/Dep_time1/Arr_time1],[_/_/Dep_time2:Arr_time2|_]):-transfer(Arr_time1,Dep_time2).
