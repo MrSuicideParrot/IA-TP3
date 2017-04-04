@@ -27,31 +27,47 @@ class Tempo:
         self.horas = int(tempo[0])
         self.minutos = int(tempo[1])
 
-tempo = []
 
-''' READING FILE'''
-fd = open('times.pl', 'r')
-buffer=fd.read().split('\n')
-'''Parsing lines'''
+class Arvore:
+    def __init__(self, nos):
+        self.nodes = nos
+        self.edges = [[False for _ in range(len(nos))] for _ in range(len(nos))]
+        for j in range(len(nos)):
+            self.edges[j][findIndex(nos[j].fim, nos)] = True
 
-'''Diferentes tipos de parsers'''
-firstLine = Literal('timetable') + Suppress('(') + Word(alphas) +Suppress(',') + Word(alphas) + Suppress(',')
-carreiraLine = Optional(Suppress('[')) + Word(nums+':'+nums) + Suppress('/') + Word(nums+':'+nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (Suppress('[')+OneOrMore(Word(alphas+',')^Word(alphas))+Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
 
-'''Inicio de parser'''
-i = 0
-index_tempo = 0
-while not (buffer == [''] or buffer):
-    aux = firstLine.parseString(buffer[0])
-    tempo.append(Percursos(aux[1], aux[2]))
-    del buffer[0]
-    while not buffer[0] == '':
-        buffer[0] = buffer[0].replace(' ','')
-        print(buffer[0])
-        aux = carreiraLine.parseString(buffer[0])
-        tempo[index_tempo].viagens.append(Carreiras(*aux))
+def readFile():
+    tempo = []
+    ''' READING FILE'''
+    fd = open('times.pl', 'r')
+    buffer=fd.read().split('\n')
+    '''Parsing lines'''
+
+    '''Diferentes tipos de parsers'''
+    firstLine = Literal('timetable') + Suppress('(') + Word(alphas) +Suppress(',') + Word(alphas) + Suppress(',')
+    carreiraLine = Optional(Suppress('[')) + Word(nums+':'+nums) + Suppress('/') + Word(nums+':'+nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (Suppress('[')+OneOrMore(Word(alphas+',')^Word(alphas))+Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
+
+    '''Inicio de parser'''
+    i = 0
+    index_tempo = 0
+    while not (buffer == [''] or buffer):
+        aux = firstLine.parseString(buffer[0])
+        tempo.append(Percursos(aux[1], aux[2]))
         del buffer[0]
-    del buffer[0]
-    ++index_tempo
+        while not buffer[0] == '':
+            buffer[0] = buffer[0].replace(' ','')
+            print(buffer[0])
+            aux = carreiraLine.parseString(buffer[0])
+            tempo[index_tempo].viagens.append(Carreiras(*aux))
+            del buffer[0]
+        del buffer[0]
+        ++index_tempo
 
-'''Fim de parser'''
+    return tempo
+
+
+def findIndex(target, array):
+    for i in range(len(array)):
+        if array[i].partida == target:
+            return i
+    raise Exception('Valor não se encontrava no array!')
