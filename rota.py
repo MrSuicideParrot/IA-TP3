@@ -1,5 +1,5 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
-
+import argparse
 
 class Carreiras:
     def __init__(self,data_Inicio, data_Fim, numeroID, dias):
@@ -57,9 +57,6 @@ class Arvore:
             self.edges[posicINI][posicFIM] = aux.viagens
             self.edgesVeracidade[posicINI][posicFIM] = True
 
-
-
-
     def search(self, partida, destino, day):
         startIndex = self.dicionario[partida]
         endIndex = self.dicionario[destino]
@@ -77,7 +74,6 @@ class Arvore:
         '''Voo indireto usando dfs'''
         resposta = self.dfs(startIndex, endIndex, day)
 
-
     def dfs(self, partida, destino, hchegada, day, rota = []):
         '''Caso de paragem'''
         if partida == destino:
@@ -86,11 +82,13 @@ class Arvore:
         resAux = None
         for i in range(len(self.dicionario)):
             if self.edgesVeracidade[partida][i]:
+                self.edgesVeracidade[partida][i] = False
                 for aux in self.edge[partida][i]:
                     if day in aux and hchegada.transfer(aux.data_Inicio):
                         resAux=self.dfs(i, destino, aux.data_Fim, day, rota)
                         if resAux is not None:
                             return aux.__str__()+"/"+resAux
+            self.edgesVeracidade[partida][i] = True
         return None
 
 def readFile():
@@ -130,5 +128,16 @@ def findIndex(target, array):
     raise Exception('Valor não se encontrava no array!')
 
 def main():
+    '''Parser da linha de comandos'''
+    parser = argparse.ArgumentParser(description='Programa de calculo de itenerário entre aeroportos.')
+    parser.add_argument('-p','--partida', type=str, help='Aeroporto de partida')
+    parser.add_argument('-d','--destino', type=str, help='Aeroporto de destino')
+    parser.add_argument('--day', choices=['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'],help='Dia onde pertende que a rota se aplique.')
+
+    '''Inicio do script'''
+    args = parser.parse_args()
     connects = Arvore(readFile())
-    
+    connects.search(args.partida, args.destino, args.day)
+
+if __name__ == '__main__':
+    main()
