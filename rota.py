@@ -5,6 +5,7 @@ class Carreiras:
     def __init__(self,data_Inicio, data_Fim, numeroID, dias):
         diasPars = OneOrMore(Word(alphas) + Optional(Suppress(',')))
         self.data_Inicio = Tempo(data_Inicio)
+        self.data_Inicio = Tempo(data_Inicio)
         self.data_Fim = Tempo(data_Fim)
         self.numeroID = numeroID
         if dias == 'alldays':
@@ -63,18 +64,21 @@ class Arvore:
 
         '''Caso exista um voo direto'''
         resposta = None
-        for aux in self.edges[startIndex][endIndex]:
-            if day in aux.dias:
-                resposta = aux.__str__()
-
+        try:
+            for aux in self.edges[startIndex][endIndex]:
+                if day in aux.dias:
+                    resposta = aux.__str__()
+        except TypeError:
+            pass
         if resposta is not None:
             print(partida+"/"+destino+"/"+resposta)
             return
 
         '''Voo indireto usando dfs'''
-        resposta = self.dfs(startIndex, endIndex, day)
+        resposta = self.dfs(partida=startIndex, destino=endIndex, day=day)
+        print(resposta)
 
-    def dfs(self, partida, destino, hchegada, day, rota = []):
+    def dfs(self, partida, destino, day, hchegada=None, rota=[]):
         '''Caso de paragem'''
         if partida == destino:
             return []
@@ -83,11 +87,14 @@ class Arvore:
         for i in range(len(self.dicionario)):
             if self.edgesVeracidade[partida][i]:
                 self.edgesVeracidade[partida][i] = False
-                for aux in self.edge[partida][i]:
-                    if day in aux and hchegada.transfer(aux.data_Inicio):
-                        resAux=self.dfs(i, destino, aux.data_Fim, day, rota)
-                        if resAux is not None:
-                            return aux.__str__()+"/"+resAux
+                try:
+                    for aux in self.edges[partida][i]:
+                        if day in aux and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
+                            resAux=self.dfs(i, destino, day, aux.data_Fim, rota)
+                            if resAux is not None:
+                                return aux.__str__()+"/"+resAux
+                except TypeError:
+                    pass
             self.edgesVeracidade[partida][i] = True
         return None
 
@@ -105,13 +112,12 @@ def readFile():
     '''Inicio de parser'''
     i = 0
     index_tempo = 0
-    while not (buffer == [''] or buffer):
+    while not (buffer == [''] or buffer == []):
         aux = firstLine.parseString(buffer[0])
         tempo.append(Percursos(aux[1], aux[2]))
         del buffer[0]
         while not buffer[0] == '':
             buffer[0] = buffer[0].replace(' ','')
-            print(buffer[0])
             aux = carreiraLine.parseString(buffer[0])
             tempo[index_tempo].viagens.append(Carreiras(*aux))
             del buffer[0]
