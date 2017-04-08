@@ -122,7 +122,7 @@ def readFile():
             tempo[index_tempo].viagens.append(Carreiras(*aux))
             del buffer[0]
         del buffer[0]
-        ++index_tempo
+        index_tempo += 1
 
     return tempo
 
