@@ -112,18 +112,29 @@ class Arvore:
     def consulta(self, partida, destino):
         startIndex = self.dicionario[partida]
         endIndex = self.dicionario[destino]
-        dicionario = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        dicionarioL = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         usedDays = [False for _ in range(7)]
 
         for aux in self.edges[startIndex][endIndex]:
             for x in aux:
-                usedDays[dicionario.index(x)] = True
+                usedDays[dicionarioL.index(x)] = True
 
-        print([dicionario[index] for index in range(7) if usedDays[index]])
+        print([dicionarioL[index] for index in range(7) if usedDays[index]])
 
     '''Roteiro de varios dias'''
-    def iniciarRoteiro(self):
-        pass
+    def iniciarRoteiro(self,aeroportos,dias):
+        if len(aeroportos) != len(dias):
+            raise Exception('O número de aeroportos não é igual ao de números!')
+
+        # resultado = ''
+        dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        diaIndice = dias.index(dias[0]) + 7
+        for i in range(len(aeroportos)):
+            if i + 1 < len(aeroportos):
+                self.search(aeroportos[i], aeroportos[i+1],dias[diaIndice%7])
+            diaIndice += 1
+
+
 
 
 def readFile():
