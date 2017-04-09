@@ -15,7 +15,7 @@ class Carreiras:
             self.dias = diasPars.parseString(dias)
 
     def __str__(self):
-        return self.numeroID+"/"+self.data_Inicio.__str__()+"/"+self.data_Fim.__str__()
+        return self.numeroID+"["+self.data_Inicio.__str__()+","+self.data_Fim.__str__()+']'
 
 
 class Percursos:
@@ -35,11 +35,13 @@ class Tempo:
     def transfer(self,t2):
         t1 = self
         if t1.horas == t2.horas:
-            return 0 < t2.minutos-t1.minutos <= 40
-        if 0 <= t2.horas-t1.horas <= 1:
-            return ((60-t1.minutos)+t2.minutos <= 40)
-        else:
+            return t2.minutos-t1.minutos >= 40
+        if t2.horas-t1.horas <= 1:
+            return (60 - t1.minutos) + t2.minutos >= 40
+        elif 0 >= t2.horas-t1.horas:
             return False
+        else:
+            return True
 
     def __str__(self):
         return str(self.horas)+':'+str(self.minutos)
@@ -58,14 +60,17 @@ class Arvore:
                 self.dicionario[aux.fim] = posic
                 posic += 1
 
+        '''Criacao do dicionario reverso'''
+        self.rev_dicionario = dict((v,k) for k,v in self.dicionario.items())
+
         self.edges = [[None for _ in range(len(self.dicionario))] for _ in range(len(self.dicionario))]
-        self.edgesVeracidade = [[False for _ in range(len(self.dicionario))] for _ in range(len(self.dicionario))] #usra como o valor de True como ainda nao visitado
+        self.edgesVeracidade = [True for _ in range(len(self.dicionario))]  #usra como o valor de True como ainda nao visitado
 
         for aux in nos:
             posicINI = self.dicionario[aux.partida]
             posicFIM = self.dicionario[aux.fim]
             self.edges[posicINI][posicFIM] = aux.viagens
-            self.edgesVeracidade[posicINI][posicFIM] = True
+            #self.edgesVeracidade[posicINI][posicFIM] = True
 
     def search(self, partida, destino, day):
         startIndex = self.dicionario[partida]
@@ -80,10 +85,11 @@ class Arvore:
         except TypeError:
             pass
         if resposta is not None:
-            print(partida+"/"+destino+"/"+resposta)
+            print(partida+"-"+destino+":"+resposta)
             return
 
         '''Voo indireto usando dfs'''
+        self.edgesVeracidade[startIndex] = False
         resposta = self.dfs(partida=startIndex, destino=endIndex, day=day)
         print(resposta)
 
@@ -94,15 +100,17 @@ class Arvore:
 
         resAux = None
         for i in range(len(self.dicionario)):
-            if self.edgesVeracidade[partida][i]:
-                self.edgesVeracidade[partida][i] = False
+            #if self.edgesVeracidade[partida][i]:
+            #    self.edgesVeracidade[partida][i] = False
+            if self.edgesVeracidade[i]:
+                self.edgesVeracidade[i] = False
                 if self.edges[partida][i] is not None:
                     for aux in self.edges[partida][i]:
                         if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
                             resAux=self.dfs(i, destino, day, aux.data_Fim, rota)
                             if resAux is not None:
-                                return aux.__str__()+"/"+resAux
-            self.edgesVeracidade[partida][i] = True
+                                return self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()+"/"+resAux
+                self.edgesVeracidade[i] = True
         return None
 
 def readFile():
