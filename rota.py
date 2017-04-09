@@ -1,5 +1,4 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
-from datetime import datetime, time
 import argparse
 
 class Carreiras:
@@ -70,7 +69,6 @@ class Arvore:
             posicINI = self.dicionario[aux.partida]
             posicFIM = self.dicionario[aux.fim]
             self.edges[posicINI][posicFIM] = aux.viagens
-            #self.edgesVeracidade[posicINI][posicFIM] = True
 
     def search(self, partida, destino, day):
         startIndex = self.dicionario[partida]
@@ -98,10 +96,7 @@ class Arvore:
         if partida == destino:
             return ''
 
-        resAux = None
         for i in range(len(self.dicionario)):
-            #if self.edgesVeracidade[partida][i]:
-            #    self.edgesVeracidade[partida][i] = False
             if self.edgesVeracidade[i]:
                 self.edgesVeracidade[i] = False
                 if self.edges[partida][i] is not None:
@@ -112,6 +107,24 @@ class Arvore:
                                 return self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()+"/"+resAux
                 self.edgesVeracidade[i] = True
         return None
+
+    '''Efetua consulta na base de dados para saber em que dias e que existem voos diretos'''
+    def consulta(self, partida, destino):
+        startIndex = self.dicionario[partida]
+        endIndex = self.dicionario[destino]
+        dicionario = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        usedDays = [False for _ in range(7)]
+
+        for aux in self.edges[startIndex][endIndex]:
+            for x in aux:
+                usedDays[dicionario.index(x)] = True
+
+        print([dicionario[index] for index in range(7) if usedDays[index]])
+
+    '''Roteiro de varios dias'''
+    def iniciarRoteiro(self):
+        pass
+
 
 def readFile():
     tempo = []
@@ -151,6 +164,7 @@ def findIndex(target, array):
 def main():
     '''Parser da linha de comandos'''
     parser = argparse.ArgumentParser(description='Programa de calculo de itenerário entre aeroportos.')
+    parser.add_argument('-r','--rota',type=bool, help='Cálculo de rota')
     parser.add_argument('-p','--partida', type=str, help='Aeroporto de partida')
     parser.add_argument('-d','--destino', type=str, help='Aeroporto de destino')
     parser.add_argument('--day', choices=['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'],help='Dia onde pertende que a rota se aplique.')
