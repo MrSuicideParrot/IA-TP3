@@ -1,4 +1,5 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
+from datetime import datetime, time
 import argparse
 
 class Carreiras:
@@ -14,7 +15,7 @@ class Carreiras:
             self.dias = diasPars.parseString(dias)
 
     def __str__(self):
-        return self.numeroID+"/"+self.data_Inicio+"/"+self.data_Fim
+        return self.numeroID+"/"+self.data_Inicio.__str__()+"/"+self.data_Fim.__str__()
 
 
 class Percursos:
@@ -33,7 +34,15 @@ class Tempo:
 
     def transfer(self,t2):
         t1 = self
-        return (t2.horas - t1.horas)*60 + (t2.minutos - t1.minutos) <= 40
+        if t1.horas == t2.horas:
+            return 0 < t2.minutos-t1.minutos <= 40
+        if 0 <= t2.horas-t1.horas <= 1:
+            return ((60-t1.minutos)+t2.minutos <= 40)
+        else:
+            return False
+
+    def __str__(self):
+        return str(self.horas)+':'+str(self.minutos)
 
 class Arvore:
     def __init__(self, nos):
@@ -81,20 +90,18 @@ class Arvore:
     def dfs(self, partida, destino, day, hchegada=None, rota=[]):
         '''Caso de paragem'''
         if partida == destino:
-            return []
+            return ''
 
         resAux = None
         for i in range(len(self.dicionario)):
             if self.edgesVeracidade[partida][i]:
                 self.edgesVeracidade[partida][i] = False
-                try:
+                if self.edges[partida][i] is not None:
                     for aux in self.edges[partida][i]:
-                        if day in aux and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
+                        if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
                             resAux=self.dfs(i, destino, day, aux.data_Fim, rota)
                             if resAux is not None:
                                 return aux.__str__()+"/"+resAux
-                except TypeError:
-                    pass
             self.edgesVeracidade[partida][i] = True
         return None
 
