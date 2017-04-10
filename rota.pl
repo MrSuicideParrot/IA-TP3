@@ -19,22 +19,21 @@ verificaHora(Day,Days):-Days = alldays.
 verificaHora(Day,Days):-member(Day,Days).
 
 /*criador da rota entre um determinado ponto*/
-route(Place1, PLace2, Day, [Flight_num/Dep_time/Arr_time]):-flight(Place1,PLace2,Day,Flight_num,Dep_time,Arr_time).
 route(Place1, PLace2, Day, Route):-route_r(Place1,PLace2,Day,Route,[Place1]).
 
 /*parte recursiva da função*/
-route_r(PLace2,PLace2,Day,Route,Visited).
+route_r(Place1, PLace2, Day, [Place1-PLace2:Flight_num:Dep_time:Arr_time],Visited):-flight(Place1,PLace2,Day,Flight_num,Dep_time,Arr_time).
 route_r(Place1,PLace2,Day,Route,Visited):-
   flight(Place1,Aux,Day,Flight_num,Dep_time,Arr_time),
   \+ member(Aux,Visited),
   route_r(Aux,PLace2,Day,RouteAux,[Aux|Visited]),
-  approve([Aux/PLace1/Dep_time/Arr_time],RouteAux),
-  append([Aux/PLace1/Dep_time/Arr_time],RouteAux,Route).
+  approve([PLace1-Aux:Flight_num:Dep_time:Arr_time],RouteAux),
+  append([PLace1-Aux:Flight_num:Dep_time:Arr_time],RouteAux,Route).
 
 /* ver esta função parece muito aldrabada */
   approve([_]).
   approve([]).
-  approve([_/_/Dep_time1/Arr_time1],[_/_/Dep_time2:Arr_time2|_]):-transfer(Arr_time1,Dep_time2).
+  approve([_-_:_:Dep_time1:Arr_time1],[_-_:_:Dep_time2:Arr_time2|_]):-transfer(Arr_time1,Dep_time2).
 
   timetable(edinburgh,london,
   [ 9:40/10:50/ba4733/alldays,
