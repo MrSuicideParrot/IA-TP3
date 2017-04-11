@@ -42,13 +42,12 @@ percurso(CidadeInicial, Pontos, Day1, Day2,Percurso):-
   false.
 
 percurso(CidadeInicial, Pontos, Day1, Day2,[CidadeInicial-Aux:Day1:Flight_num:Dep_time:Arr_time|PercRest]):-
-  %permutation(Pontos,PontosAuxiliares),
-  %member(Aux,PontosAuxiliares),
+  %last(Pontos,Target),
   member(Aux,Pontos),
   flight(CidadeInicial,Aux, Day1, Flight_num,Dep_time,Arr_time),
   nextDay(Day1,Next),
-  delete(Aux,Pontos,PontosAuxiliares),
-  percurso_r(Aux, PontosAuxiliares, Target, Next, Day2, PercRest).
+  delete(Pontos,Aux,PontosAuxiliares),
+  percurso_r(Aux, PontosAuxiliares, CidadeInicial, Next, Day2, PercRest).
 
 percurso_r(CidadeInicial, [],Target, Day1, Day2,[CidadeInicial-Target:Day1:Flight_num:Dep_time:Arr_time]):-
   verifcaDia(Day1,Day2),
@@ -57,9 +56,9 @@ percurso_r(CidadeInicial, [],Target, Day1, Day2,[CidadeInicial-Target:Day1:Fligh
 percurso_r(CidadeInicial, Pontos, Target, Day1, Day2,Percurso):-
   member(Aux,Pontos),
   verifcaDia(Day1,Day2),
-  flight(CidadeInicial,Aux, Day1, Flight_num,Dep_time,Arr_time).
+  flight(CidadeInicial,Aux, Day1, Flight_num,Dep_time,Arr_time),
   nextDay(Day1, Next),
-  delete(Aux,Pontos, PontosAuxiliares),
+  delete(Pontos,Aux, PontosAuxiliares),
   percurso_r(Aux, PontosAuxiliares, Target, Next, Day2, PercRest),
   append([CidadeInicial-Aux:Day1:Flight_num:Dep_time:Arr_time],PercRest,Percurso).
 
@@ -70,8 +69,8 @@ percurso_r(CidadeInicial, Pontos, Target, Day1, Day2,Percurso):-
 
 /*verifcar dia  valido */
 verifcaDia(Day1,Day2):-
-  indexof(Index1,Day1,[mo,tu,we,th,fr,sa,su]),
-  indexof(Index2,Day2,[mo,tu,we,th,fr,sa,su]),
+  nth1(Index1,[mo,tu,we,th,fr,sa,su],Day1),
+  nth1(Index2,[mo,tu,we,th,fr,sa,su],Day2),
   Index1 =< Index2.
 
 /*Calculo do dia a seguir */
