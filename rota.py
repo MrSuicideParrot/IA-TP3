@@ -1,5 +1,6 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
 import argparse
+from copy import copy
 
 class Carreiras:
     def __init__(self,data_Inicio, data_Fim, numeroID, dias):
@@ -70,7 +71,7 @@ class Arvore:
             posicFIM = self.dicionario[aux.fim]
             self.edges[posicINI][posicFIM] = aux.viagens
 
-    def search(self, partida, destino, day):
+    def search(self, partida, destino, day, direct=False):
         startIndex = self.dicionario[partida]
         endIndex = self.dicionario[destino]
 
@@ -83,18 +84,19 @@ class Arvore:
         except TypeError:
             pass
         if resposta is not None:
-            print(partida+"-"+destino+":"+resposta)
-            return
+            return [partida+"-"+destino+":"+resposta]
 
-        '''Voo indireto usando dfs'''
-        self.edgesVeracidade[startIndex] = False
-        resposta = self.dfs(partida=startIndex, destino=endIndex, day=day)
-        print(resposta)
+        if not direct:
+            '''Voo indireto usando dfs'''
+            self.edgesVeracidade[startIndex] = False
+            return self.dfs(partida=startIndex, destino=endIndex, day=day)
+        else:
+            return None
 
     def dfs(self, partida, destino, day, hchegada=None, rota=[]):
         '''Caso de paragem'''
         if partida == destino:
-            return ''
+            return []
 
         for i in range(len(self.dicionario)):
             if self.edgesVeracidade[i]:
@@ -104,7 +106,7 @@ class Arvore:
                         if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
                             resAux=self.dfs(i, destino, day, aux.data_Fim, rota)
                             if resAux is not None:
-                                return self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()+"/"+resAux
+                                return [self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()].append(resAux)
                 self.edgesVeracidade[i] = True
         return None
 
@@ -122,17 +124,54 @@ class Arvore:
         print([dicionarioL[index] for index in range(7) if usedDays[index]])
 
     '''Roteiro de varios dias'''
-    def iniciarRoteiro(self,aeroportos,dias):
-        if len(aeroportos) != len(dias):
-            raise Exception('O número de aeroportos não é igual ao de números!')
+    def iniciarRoteiro(self,start, aeroportos, diaInicio, diaFim):
+        '''Tradução de cenas'''
+        aeroportosNum = [self.dicionario[i] for i in aeroportos]
+        startNum = self.dicionario[start]
+        self.edgesVeracidade[startNum] = False
+        return self.r_roteiro(startNum,aeroportosNum,startNum,diaInicio,self.counterDay(diaFim))
 
-        # resultado = ''
+    def r_roteiro(self,start,aerportos,fim,diaInicio, diaFim):
+        if diaFim <= 0:
+            return  None
+
+        if not aerportos:
+            return self.search(start,fim,diaInicio,True)
+        else:
+            for i in range(len(self.dicionario)):
+                if self.edgesVeracidade[i]:
+                    if i in aerportos:
+                        self.edgesVeracidade[i] = False
+                        resultado1 = self.search(start,i,diaInicio,True)
+                        if resultado1 is not None:
+                            resultado2 = self.r_roteiro(i,self.arraySubtractor(aerportos,i),fim,self.nextDay(diaInicio),diaFim-1)
+                            if resultado2 is not None:
+                                return resultado1.append(resultado2)
+                        self.edgesVeracidade[i] = True
+            return self.r_roteiro(start,aerportos,fim,self.nextDay(diaInicio), diaFim)
+
+    '''Retorna o dia a seguir'''
+    def nextDay(day):
         dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
-        diaIndice = dias.index(dias[0]) + 7
-        for i in range(len(aeroportos)):
-            if i + 1 < len(aeroportos):
-                self.search(aeroportos[i], aeroportos[i+1],dias[diaIndice%7])
-            diaIndice += 1
+        return dias[(8+dias.index(day))%7]
+
+    '''calcula o número máximo de viagens'''
+    def counterDay(dayI, dayF):
+        dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        startIndex = dias.index(dayI)
+        endIndex = dias.index(dayF)
+        count = 0
+        while startIndex != endIndex:
+            startIndex = (8 + startIndex)%7
+            count += 1
+        return count
+
+    '''Uma copia do array sme um determinado elemento'''
+    def arraySubtractor( array, item):
+        aux = copy(array)
+        return aux.remove(item)
+
+
 
 
 
@@ -183,7 +222,7 @@ def main():
     '''Inicio do script'''
     args = parser.parse_args()
     connects = Arvore(readFile())
-    connects.search(args.partida, args.destino, args.day)
+    print(connects.search(args.partida, args.destino, args.day))
 
 if __name__ == '__main__':
     main()
