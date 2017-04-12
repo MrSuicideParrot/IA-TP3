@@ -13,7 +13,7 @@ A programação em lógica leva-nos a uma abordagem diferente aos problemas. Por
 
 Neste relatório iremos abordar duas linguagens como representantes de paradigmas diferentes, \textit{Prolog} e \textit{Python}. Prolog como linguagem de paradigma lógico e Python com uma linguagem orientada.
 
-A programação en ProLog baseia-se na utilização de perguntas, que incidem nos factos e regras que foram anteriormente definidos. O Prolog aplica uma prova lógica na tentativa 
+A programação en ProLog baseia-se na utilização de perguntas, que incidem nos factos e regras que foram anteriormente definidos. O Prolog aplica uma prova lógica na tentativa
 \section{Planeamento de viagens}
 No problema de planeamento de viagens foi necessário implementar uma resposta a três problemas diferentes. Com base numa base de dados com os voos entre os vários aeroportos, o nosso programa deveria responder aos seguintes problemas: 
 \begin{itemize}
@@ -22,8 +22,13 @@ No problema de planeamento de viagens foi necessário implementar uma resposta a
  \item Planear uma percurso com inicio e fim na mesma cidade, é necessário que nessa rota passemos por determinados pontos mo entanto, só podemos apanhar um voo por dia, a data de inicio e fim do percurso é dado pelo utilizador.   
 \end{itemize}
 
-
 \subsection{Implementação em Prolog}
+A implementação da solução do problema baseia-se na utilização dos predicados dados no enunciado do problema. O Prolog interpreta a sintaxe naturalmente, unicamente foi necessário alterar a precedência do operador ":", por \textit{default} tem uma precedência de 600, os predicados da forma como nos eram dados tinham o operadores ":" a separar a horas dos minutos, e o operador "/" a separar elementos, como o operador "/" tem precedência 400 ia nos trazer problemas na associação por isso fizemos essa definição.
+
+O predicado flight/6 indica-nos a existência ou inexistência da ocorrência de um voo direto num determinado dia ou horário. Este predicado será utilizado na maioria dos outros predicados já que passa por ele qualquer consulta aos voos diretos entre aeroportos.
+
+O predicado route/4 é aquele que nos permite responder ao segundo problema deste trabalho, ligar diferentes aeroportos mesmo que não haja uma ligação direta. Na essência do route/4 encontra-se o route\_r/5 que funciona como parte recursiva do predicado route. O route\_r/5 representa voos diretos entre aeroportos ou voos indiretos com utilização de locais auxiliares para fazer a ligação. Devido à existência destes locais auxiliares tivemos que utilizar uma lista de visitados que permite que o algoritmo não entrasse em loop, para o funcionamento desta lista de visitado foi importante a um modulo de Prolog intitulado por lists, que nos permitiu por exemplo saber se um determinado elemento encontrava-se numa lista.
+
 \subsection{Implementação em Python}
 \section{Analisador sintático para Língua Portuguesa}
 \subsection{Implementação em Prolog}
