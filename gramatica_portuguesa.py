@@ -28,11 +28,11 @@ def preparaString(frase_raw):
 
 def fraseNomial(componentes,tipo):
     if tipo[0] == 'nome':
-        return 1, 'fraseNomial('+tipo[0]+'('+componentes[0]+')'')'
-    elif tipo[0] == 'artigo' and tipo[1] == 'nome':
-        return 2, 'fraseNomial(artigo('+componentes[0]+')nome('+componentes[1]+'))'
-    elif tipo[0] == 'contracao' and tipo[1] == 'nome':
-        return 2, 'fraseNomial(contracao(' + componentes[0] + ')nome(' + componentes[1] + '))'
+        return 1, 'fraseNominal('+tipo[0]+'('+componentes[0]+')'')'
+    elif len(componentes) >= 2 and tipo[0] == 'artigo' and tipo[1] == 'nome':
+        return 2, 'fraseNominal(artigo('+componentes[0]+')nome('+componentes[1]+'))'
+    elif len(componentes) >= 2 and tipo[0] == 'contracao' and tipo[1] == 'nome':
+        return 2, 'fraseNominal(contracao(' + componentes[0] + ')nome(' + componentes[1] + '))'
     else:
         return 0, None
 
@@ -48,24 +48,27 @@ def frasePreposicional(componentes, tipos):
 
 def fraseVerbal(componentes, tipos):
     if tipos[0] == 'verbo':
-        num, ret = fraseNomial(componentes[1:],tipos[1:])
-        if num != 0:
-            return 1 + num, 'fraseVerbal(verbo(' + componentes[0] + ')' + ret + ')'
-        else:
-            num, ret = frasePreposicional(componentes[1:], tipos[1:])
+        if len(componentes)>1:
+            num, ret = fraseNomial(componentes[1:],tipos[1:])
             if num != 0:
-                return 1+num, 'fraseVerbal(verbo(' + componentes[0] + ')'+ret+')'
+                return 1 + num, 'fraseVerbal(verbo(' + componentes[0] + ')' + ret + ')'
             else:
-                return 1, 'fraseVerbal(verbo('+componentes[0]+'))'
+                num, ret = frasePreposicional(componentes[1:], tipos[1:])
+                if num != 0:
+                    return 1+num, 'fraseVerbal(verbo(' + componentes[0] + ')'+ret+')'
+                else:
+                    return 1, 'fraseVerbal(verbo('+componentes[0]+'))'
+        else:
+            return 1, 'fraseVerbal(verbo(' + componentes[0] + '))'
     else:
         return 0, None
 
-'''Parser do argv'''
+''''''''''Parser do argv
 parser = argparse.ArgumentParser(description='Verificador de gramática portuguesa.')
 parser.add_argument('-f','--frase',type=str,help='String que pretende analisar')
-args = parser.parse_args()
-
-componentes, tipos = preparaString(args.frase)
+args = parser.parse_args()'''''
+frase = input("Insira uma frase:")
+componentes, tipos = preparaString(frase)
 
 '''Sentença'''
 num , ret = fraseNomial(componentes, tipos)
@@ -76,4 +79,4 @@ resultado = ret
 num, ret = fraseVerbal(componentes[num:],tipos[num:])
 if num == 0:
     raise ValueError('Frase incorreta!')
-print('sent('+ret+resultado+')')
+print('sent('+resultado+ret+')')
