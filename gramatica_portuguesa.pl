@@ -68,6 +68,7 @@ nome_m(nome(vento)) --> [vento].
 nome_m(nome(martelo)) --> [martelo].
 nome_m(nome(tambor)) --> [tambor].
 nome_m(nome(tempo)) --> [tempo].
+nome_m(nome(rosto)) --> [rosto]
 
 %nome femenino
 nome_f(nome(menina)) --> [menina].
@@ -108,11 +109,11 @@ contracao_m(artigo(no)) --> [no].
 contracao_m(artigo(pelo)) --> [pelo].
 
 %plural
-contracao_p_m(artigo(no)) --> [nos].
-contracao_p_m(artigo(pelo)) --> [pelos].
+contracao_p_m(artigo(nos)) --> [nos].
+contracao_p_m(artigo(pelos)) --> [pelos].
 
-contracao_p_f(artigo(na)) --> [nas].
-contracao_p_f(artigo(pela)) --> [pelas].
+contracao_p_f(artigo(nas)) --> [nas].
+contracao_p_f(artigo(pelas)) --> [pelas].
 
 %artigo masculo
 artigo_m(artigo(o)) --> [o].
