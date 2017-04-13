@@ -15,44 +15,45 @@ frase_nom_p --> noun_p_m.
 */
 
 %Nome e verbo
-sentenca(sentenca(N,V)) --> frase_nom(N), frase_ver(V)
-sentenca(sentenca(NP,VP)) --> frase_nom_p(NP), frase_ver_p(VP)
+sentenca(sentenca(N,V)) --> frase_nom(N), frase_ver(V).
+sentenca(sentenca(NP,VP)) --> frase_nom_p(NP), frase_ver_p(VP).
 
 %Nome  artigo ou nome -- Tudo no singular
-frase_nom(frase_nom(Nome)) --> nome_m(Nome)
-frase_nom(frase_nom(Nome)) --> nome_f(Nome)
+frase_nom(frase_nom(Nome)) --> nome_m(Nome).
+frase_nom(frase_nom(Nome)) --> nome_f(Nome).
 
-frase_nom(frase_nom(Artigo, Nome)) --> artigo_m(Artigo), nome_m(Nome)
-frase_nom(frase_nom(Artigo, Nome)) --> artigo_f(Artigo), nome_f(Nome)
+frase_nom(frase_nom(Artigo, Nome)) --> artigo_m(Artigo), nome_m(Nome).
+frase_nom(frase_nom(Artigo, Nome)) --> artigo_f(Artigo), nome_f(Nome).
 
-frase_nom(frase_nom(Contra, Nome)) --> contracao_m(Contra), nome_m(Nome)
-frase_nom(frase_nom(Contra, Nome)) --> contracao_f(Contra), nome_f(Nome)
+frase_nom(frase_nom(Contra, Nome)) --> contracao_m(Contra), nome_m(Nome).
+frase_nom(frase_nom(Contra, Nome)) --> contracao_f(Contra), nome_f(Nome).
 
 
 %Nome artigo ou nome -- Tudo Plural
-frase_nom_p(frase_nom_p(Nome)) --> nome_p_m(Nome)
-frase_nom_p(frase_nom_p(Nome)) --> nome_p_f(Nome)
+frase_nom_p(frase_nom_p(Nome)) --> nome_p_m(Nome).
+frase_nom_p(frase_nom_p(Nome)) --> nome_p_f(Nome).
 
-frase_nom_p(frase_nom_p(Artigo, Nome)) --> nome_p_m(Nome), artigo_p_m(Artigo)
-frase_nom_p(frase_nom_p(Artigo, Nome)) --> nome_p_f(Nome), artigo_p_f(Artigo)
+frase_nom_p(frase_nom_p(Artigo, Nome)) --> artigo_p_m(Artigo), nome_p_m(Nome).
+frase_nom_p(frase_nom_p(Artigo, Nome)) --> artigo_p_f(Artigo), nome_p_f(Nome).
 
-frase_nom_p(frase_nom_p(Contra, Nome)) --> contracao_p_m(Contra), nome_p_m(Nome)
-frase_nom_p(frase_nom_p(Contra, Nome)) --> contracao_p_f(Contra), nome_p_f(Nome)
+frase_nom_p(frase_nom_p(Contra, Nome)) --> contracao_p_m(Contra), nome_p_m(Nome).
+frase_nom_p(frase_nom_p(Contra, Nome)) --> contracao_p_f(Contra), nome_p_f(Nome).
 
 %Preposição
-frase_prep(frase_prep(Preposi,Frase)) --> prep(Preposi), frase_nom(Frase)
-frase_prep(frase_prep(Preposi,Frase)) --> prep(Preposi), frase_nom_p(Frase)
+frase_prep(frase_prep(Preposi,Frase)) --> prep(Preposi), frase_nom(Frase).
+frase_prep(frase_prep(Preposi,Frase)) --> prep(Preposi), frase_nom_p(Frase).
 
 %Verbo singular
-frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom(Resto)
-frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom_p(Resto)
-frase_ver(frase_ver(Verbo)) --> verbo(Verbo)
+frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom(Resto).
+frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom_p(Resto).
+frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo(Verbo), frase_prep(Resto).
+frase_ver(frase_ver(Verbo)) --> verbo(Verbo).
 
 %Verbo plural
-frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_nom(Resto)
-frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_nom_p(Resto)
-frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_prep(Resto)
-frase_ver_p(frase_ver_p(Verbo)) --> verbo_p(Verbo)
+frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_nom(Resto).
+frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_nom_p(Resto).
+frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo_p(Verbo), frase_prep(Resto).
+frase_ver_p(frase_ver_p(Verbo)) --> verbo_p(Verbo).
 
 %Agora anar a fazer levantamentos de palavras
 
