@@ -1,3 +1,5 @@
+from sys import argv
+
 nomeM = ['cacador', 'cachorro', 'rio', 'mar', 'tempo', 'sino', 'vento', 'martelo', 'tambor', 'tempo','rosto']
 nomeF = ['menina','noticia', 'floresta','porta','vida','mae','cidade']
 
@@ -23,7 +25,7 @@ artigoPF = ['as','As']
 carta = {'nomeM':['artigoM','contracaoM'],'nomeF':['artigoF','contracaoF'],'nomePM':['artigoPM','contracaoPM'],'nomePF':['artigoPF','contracaoPF']}
 
 def preparaString(frase_raw):
-    frase_preparada = frase_raw.split()
+    frase_preparada = frase_raw
     tipos = []
     for i in frase_preparada:
         if i in preposicao:
@@ -133,8 +135,7 @@ def fraseVerbal(componentes, tipos, type):
         return 0, None
 
 
-frase = input("Insira uma frase:")
-componentes, tipos = preparaString(frase)
+componentes, tipos = preparaString(argv[1:])
 
 '''Sentença'''
 num , ret, flag = fraseNomial(componentes, tipos)
