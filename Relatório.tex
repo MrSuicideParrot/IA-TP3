@@ -29,10 +29,23 @@ O predicado flight/6 indica-nos a existência ou inexistência da ocorrência de
 
 O predicado route/4 é aquele que nos permite responder ao segundo problema deste trabalho, ligar diferentes aeroportos mesmo que não haja uma ligação direta. Na essência do route/4 encontra-se o route\_r/5 que funciona como parte recursiva do predicado route. O route\_r/5 representa voos diretos entre aeroportos ou voos indiretos com utilização de locais auxiliares para fazer a ligação. Devido à existência destes locais auxiliares tivemos que utilizar uma lista de visitados que permite que o algoritmo não entrasse em loop, para o funcionamento desta lista de visitado foi importante a um modulo de Prolog intitulado por lists, que nos permitiu por exemplo saber se um determinado elemento encontrava-se numa lista.
 
+O predicado percurso/5 permite-nos planear um percurso ao longo de vários locais, fazendo unicamente um voo por dia. É de salientar que na nossa implementação se o algoritmo não conseguir encontrar uma ligação para um determinado dia antes de avançar para outra cidade ele dá tenta procurar uma viagem no dia a seguir, até atingir o dia final.
 \subsection{Implementação em Python}
+Ao contrário da implementação anterior onde o os predicados dados são interpretados sem qualquer adaptação pelo programa, na implementação deste problema em Python, foi necessário por um lado criar uma estrutura de dados para armazenar a informação e por outro lado criar um \textit{parser} para interpretação dos predicados dados inicialmente.
+
+A interpretação destes predicados é feita através da leitura de um ficheiro que se encontra na pasta do script, este ficheiro é código ProLog simples, que depois de lido é interpretado por um parser construido com base no módulo \textit{pyparsing}. Depois de interpretados os dados são guardados numa árvore que onde se encontram todas as ligações entre aeroportos e os seus respetivos horários.
+
+Depois dos dados interpretados, para qualquer tipo de query a resposta é efetuar um DFS até encontrar a resposta, com diferentes características dependendo a especificidade do problema, exatamente como o ProLog efetua, claro que no caso do python é implementado pelo programador.
+\subsection{Comparação de implementações}
+
 \section{Analisador sintático para Língua Portuguesa}
+O segundo ponto deste trabalho não era um problema em si, mas implementar algo para o qual o ProLog encontra-se nativamente preparado, a criação de uma gramática que conseguisse analisar uma frase em Português e conclui-se a frase se encontrava gramaticalmente correta.
 \subsection{Implementação em Prolog}
+A implementação em ProLog foi simples, depois do levantamento de todas as palavras que constituam as frases exemplo bastou definir cláusulas, para cada uma dessas palavras associando-as ao seu tipo gramatical depois disso bastou definir clausula para os tipos de frases que existem na língua portuguesa.
 \subsection{Implementação em Python}
+Em Python a implementação da gramática foi um pouco mais complicada, no entanto os princípios foram os mesmos. Definimos uma lista para cada tipo de palavra e armazenámos-las nessa lista. Depois a parte mais complicada desta implementação foi identificar que tipo de frase se tratava, basicamente a solução a este problema foi efetuar uma função para cada tipo de frase, e testar em cada uma se um determinado segmento se identificava nessa definição. 
+\subsection{Comparação de implementações}
+
 \section{Conclusão}
 \end{document}
 
