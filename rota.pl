@@ -51,7 +51,7 @@ percurso(CidadeInicial, Pontos, Day1, Day2,[CidadeInicial-Aux:Day1:Flight_num:De
 
 percurso_r(CidadeInicial, [],Target, Day1, Day2,[CidadeInicial-Target:Day1:Flight_num:Dep_time:Arr_time]):-
   verifcaDia(Day1,Day2),
-  flight(CidadeInicial,Target, Day1, Flight_num,Dep_time,Arr_time).
+  flight(CidadeInicial,Target, Day2, Flight_num,Dep_time,Arr_time).
 
 percurso_r(CidadeInicial, Pontos, Target, Day1, Day2,Percurso):-
   member(Aux,Pontos),

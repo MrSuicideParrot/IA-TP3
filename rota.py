@@ -1,5 +1,5 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
-import argparse
+#import argparse
 from copy import copy
 
 class Carreiras:
@@ -212,17 +212,28 @@ def findIndex(target, array):
     raise Exception('Valor não se encontrava no array!')
 
 def main():
-    '''Parser da linha de comandos'''
-    parser = argparse.ArgumentParser(description='Programa de calculo de itenerário entre aeroportos.')
-    parser.add_argument('-r','--rota',type=bool, help='Cálculo de rota')
-    parser.add_argument('-p','--partida', type=str, help='Aeroporto de partida')
-    parser.add_argument('-d','--destino', type=str, help='Aeroporto de destino')
-    parser.add_argument('--day', choices=['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'],help='Dia onde pertende que a rota se aplique.')
-
-    '''Inicio do script'''
-    args = parser.parse_args()
     connects = Arvore(readFile())
-    print(connects.search(args.partida, args.destino, args.day))
+    opc = int(input('Selecione o tipo de query que pretende:\n1 - Rota\n2 - Iniciar roteiro\n3 - Todos os dias onde existem voos diretos\n'))
+    if opc == 1:
+        # search(self, partida, destino, day,
+        day_ini = input('Insira o cidade inicial:')
+        day_fin = input('Insira o cidade final:')
+        day = input('Insira o dia onde pretende fazer a query:')
+        print(connects.search(day_ini,day_fin,day))
+
+    elif opc == 2:
+        cid_ini = input('Insira o aeroporto inicial:')
+        list = input('Insira as varias cidade separadas por espaços')
+        day_ini = input('Insira o dia inicial:')
+        day_fin = input('Insira o dia final:')
+        print(connects.iniciarRoteiro(cid_ini,list.split(),day_ini,day_fin))
+
+    elif opc == 3:
+        day_ini = input('Insira o dia inicial:')
+        day_fin = input('Insira o dia final:')
+        print(connects.consulta(day_ini, day_fin))
+
+
 
 if __name__ == '__main__':
     main()
