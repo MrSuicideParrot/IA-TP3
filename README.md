@@ -62,8 +62,7 @@ Os programas de python, só são compativeis com python3, e deverão estar insta
 
 As várias implementações foram testadas nas seguintes máquinas:
 * Arch Linux, Python 3.6.0, GCC 6.3.1, YAP 6.2.2
-
-
+***
 ##### Trabalho realizado por:
 ###### [André Cirne](https://sigarra.up.pt/fcup/pt/fest_geral.cursos_list?pv_num_unico=201505860)
 ###### [José Sousa](https://sigarra.up.pt/fcup/pt/fest_geral.cursos_list?pv_num_unico=201503443)
