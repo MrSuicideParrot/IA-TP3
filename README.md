@@ -45,3 +45,25 @@ A implementação em Python apresenta um menu que o guia ao longo das queries qu
 ````
 
 #### 2º Problema - Gramática portuguesa
+Verificar se uma frase encontra-se bem construida de forma a respeitar as regras da gramática portuguesa.
+###### **_ProLog_**
+````ProLog
+  sentenca(Resposta, ['O',caçador,correu,pela,floresta], []).
+````
+###### **_Python_**
+````Bash
+  $ python3 gramatica_portuguesa.py O cacador correu pela floresta
+````
+#### Implementação
+Os programas de python, só são compativeis com python3, e deverão estar instalados os seguintes módulos:
+* sys
+* copy
+* pyparsing
+
+As várias implementações foram testadas nas seguintes máquinas:
+* Arch Linux, Python 3.6.0, GCC 6.3.1, YAP 6.2.2
+
+
+##### Trabalho realizado por:
+###### [André Cirne](https://sigarra.up.pt/fcup/pt/fest_geral.cursos_list?pv_num_unico=201505860)
+###### [José Sousa](https://sigarra.up.pt/fcup/pt/fest_geral.cursos_list?pv_num_unico=201503443)
