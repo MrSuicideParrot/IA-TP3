@@ -24,47 +24,50 @@
 
 \tableofcontents
 \section{Introdução}
-A programação em lógica leva-nos a uma abordagem diferente, quando comparada com linguagens mais imperativas. Por norma numa linguagem imperativa é necessário pensar passo por passo, como resolver o problema, já em programação lógica, não é necessário ter essa abordagem mas sim conseguirmos definir todos os factos e regras que se relacionam com o problema. A própria linguagem efectuará uma busca exaustiva até que encontre uma resposta que satisfaça a a questão efectuada[1].
+A programação em lógica leva-nos a uma abordagem diferente, quando comparada com linguagens mais imperativas. Por norma, numa linguagem imperativa é necessário pensar passo por passo, como resolver o problema, já em programação lógica, não é necessário ter essa abordagem mas sim conseguirmos definir todos os factos e regras que se relacionam com o problema. A própria linguagem efetuará uma busca exaustiva até que encontre uma resposta que satisfaça a questão efetuada[1].
+
+A programação em Prolog baseia-se na utilização de perguntas com fundamento lógico, que incidem nos factos e regras que foram anteriormente definidos. O Prolog depois de efetuada uma questão, vai tentar encontrar um padrão que se encaixe nessa questão, quando encontra algo que se encaixe, sinaliza-a como solução. No entanto não pára, efetua \textit{backtracking} na busca e tenta encontrar outro candidato. Tudo isto sem que o programador tenha que implementar estas funcionalidades.
 
 Neste relatório iremos abordar duas linguagens como representantes de paradigmas diferentes, \textit{Prolog} e \textit{Python}. Prolog como linguagem de paradigma lógico e Python com uma linguagem imperativa.
 
-A programação em Prolog baseia-se na utilização de perguntas com fundamento lógico, que incidem nos factos e regras que foram anteriormente definidos. O Prolog depois de ef
 \section{Planeamento de viagens}
-No problema de planeamento de viagens foi necessário implementar uma resposta a três problemas diferentes. Com base numa base de dados com os voos entre os vários aeroportos, o nosso programa deveria responder aos seguintes problemas: 
+No problema de planeamento de viagens foi necessário implementar uma resposta a três questões diferentes. 
+
+Com base na base de dados com os voos entre os vários aeroportos, o nosso programa deve responder aos seguintes problemas: 
 \begin{itemize}
  \item Conseguir dizer em que dias é que existem ligações diretas entre dois aeroportos;
- \item Conseguir dizer quais são os voos que temos de apanhar num determinado dia para conseguir ir de um aeroporto para outro, sendo que não seja necessário existir uma ligação direta e que exista um tempo para transferência entre voos de pelo menos 40 minutos;
- \item Planear uma percurso com inicio e fim na mesma cidade, é necessário que nessa rota passemos por determinados pontos mo entanto, só podemos apanhar um voo por dia, a data de inicio e fim do percurso é dado pelo utilizador.   
+ \item Conseguir dizer quais são os voos que temos de apanhar num determinado dia para conseguir ir de um aeroporto para outro, sendo que não seja necessário a existência de uma ligação direta e que o tempo para a transferência entre voos seja de pelo menos 40 minutos;
+ \item Planear uma percurso com inicio e fim na mesma cidade. É necessário que nessa rota passemos por determinados pontos, no entanto, só podemos apanhar um voo por dia; a data de inicio e fim do percurso é dado pelo utilizador.   
 \end{itemize}
 
 \subsection{Implementação em Prolog}
-A implementação da solução do problema baseia-se na utilização dos predicados dados no enunciado do problema. O Prolog interpreta a sintaxe naturalmente, unicamente foi necessário alterar a precedência do operador ":", por \textit{default} tem uma precedência de 600, os predicados da forma como nos eram dados tinham o operadores ":" a separar a horas dos minutos, e o operador "/" a separar elementos, como o operador "/" tem precedência 400 ia nos trazer problemas na associação por isso fizemos essa definição.
+A implementação da solução do problema baseia-se na utilização dos predicados dados no enunciado. O Prolog interpreta a sintaxe nativamente, unicamente foi necessário alterar a precedência do operador ":", por \textit{default} tem uma precedência de 600. Os predicados da forma como nos eram dados tinham o operadores ":" a separar as horas dos minutos, e o operador "/" a separar elementos, como o operador "/" tem precedência 400 ia nos trazer problemas na associação, por isso fizemos essa definição.
 
 O predicado flight/6 indica-nos a existência ou inexistência da ocorrência de um voo direto num determinado dia ou horário. Este predicado será utilizado na maioria dos outros predicados já que passa por ele qualquer consulta aos voos diretos entre aeroportos.
 
-O predicado route/4 é aquele que nos permite responder ao segundo problema deste trabalho, ligar diferentes aeroportos mesmo que não haja uma ligação direta. Na essência do route/4 encontra-se o route\_r/5 que funciona como parte recursiva do predicado route. O route\_r/5 representa voos diretos entre aeroportos ou voos indiretos com utilização de locais auxiliares para fazer a ligação. Devido à existência destes locais auxiliares tivemos que utilizar uma lista de visitados que permite que o algoritmo não entrasse em loop, para o funcionamento desta lista de visitado foi importante a um modulo de Prolog intitulado por lists, que nos permitiu por exemplo saber se um determinado elemento encontrava-se numa lista.
+O predicado route/4 é aquele que nos permite responder ao segundo problema deste trabalho, ligar diferentes aeroportos mesmo que não haja uma ligação direta. Na essência do route/4 encontra-se o route\_r/5, que funciona como parte recursiva do predicado route. O route\_r/5 representa voos diretos entre aeroportos ou voos indiretos com utilização de locais auxiliares para fazer a ligação. Devido à existência destes locais auxiliares utilizamos uma lista de visitados que permite que o algoritmo não entrasse em \textit{loop}. Para o funcionamento da lista de visitado foi importante o módulo de Prolog lists, que nos permitiu por exemplo saber se um determinado elemento encontrava-se numa lista.
 
-O predicado percurso/5 permite-nos planear um percurso ao longo de vários locais, fazendo unicamente um voo por dia. É de salientar que na nossa implementação se o algoritmo não conseguir encontrar uma ligação para um determinado dia antes de avançar para outra cidade ele dá tenta procurar uma viagem no dia a seguir, até atingir o dia final.
+O predicado percurso/5 permite-nos planear um percurso ao longo de vários locais, fazendo unicamente um voo por dia. O seu funcionamento base é equivalente ao do route/4, no entanto com mais restrições. É de salientar que na nossa implementação se o algoritmo não conseguir encontrar uma ligação para um determinado dia antes de avançar para outra cidade ele dá tenta procurar uma viagem no dia a seguir, até atingir o dia final.
 \subsection{Implementação em Python}
-Ao contrário da implementação anterior onde o os predicados dados são interpretados sem qualquer adaptação pelo programa, na implementação deste problema em Python, foi necessário por um lado criar uma estrutura de dados para armazenar a informação e por outro lado criar um \textit{parser} para interpretação dos predicados dados inicialmente.
+Ao contrário da implementação anterior onde o os predicados dados são interpretados sem qualquer adaptação pelo programa, na implementação deste problema em Python, foi necessário por um lado criar uma estrutura de dados para armazenar a informação e por outro lado, criar um \textit{parser} para interpretação dos predicados dados inicialmente.
 
-A interpretação destes predicados é feita através da leitura de um ficheiro que se encontra na pasta do script, este ficheiro é código ProLog simples, que depois de lido é interpretado por um parser construido com base no módulo \textit{pyparsing}. Depois de interpretados os dados são guardados numa árvore que onde se encontram todas as ligações entre aeroportos e os seus respectivos horários.
+A interpretação destes predicados é feita através da leitura de um ficheiro que se encontra na pasta do \textit{script}, este é código ProLog simples, que depois de lido é interpretado por um \textit{parser} construido com base no módulo pyparsing. Depois de interpretados os dados são guardados numa árvore, onde se encontram todas as ligações entre aeroportos e os seus respetivos horários.
 
-Depois dos dados interpretados, para qualquer tipo de query a resposta é efetuar um DFS até encontrar a resposta, com diferentes características dependendo a especificidade do problema, exactamente como o ProLog efectua, claro que no caso do python é implementado pelo programador.
-\subsection{Comparação de implementações}
-%falta acabar
-\section{Analisador sintáctico para Língua Portuguesa}
-O segundo ponto deste trabalho não era um problema em si, mas implementar algo para o qual o ProLog encontra-se nativamente preparado, a criação de uma gramática que conseguisse analisar uma frase em Português e conclui-se a frase se encontrava gramaticalmente correta.
+Depois dos dados interpretados, para qualquer tipo de \textit{query} a resposta é dada efetuando um DFS, com diferentes características dependendo a especificidade do problema. Este funcionamento é equivalente ao do ProLog, claro que no caso do Python é implementado pelo programador.
+%\subsection{Comparação de implementações}
+%A implementação do problema em ProLog foi mais simples e legível. Como o Python apresenta o conceito tipos, obrigou a associar a cada aeroporto um código levando ainda mais à sua ilegibilidade. %Este texto esta ramiro  
+\section{Analisador sintático para Língua Portuguesa}
+O segundo ponto deste trabalho não era um problema em si, mas implementar algo para o qual o ProLog encontra-se nativamente preparado, a criação de uma gramática que conseguisse analisar uma frase em Português, com o objetivo de concluir a correção gramatical da mesma.
 \subsection{Implementação em Prolog}
-A implementação em ProLog foi simples, depois do levantamento de todas as palavras que constituam as frases exemplo bastou definir cláusulas, para cada uma dessas palavras associando-as ao seu tipo gramatical depois disso bastou definir clausula para os tipos de frases que existem na língua portuguesa.
+A implementação em ProLog foi simples, depois do levantamento de todas as palavras que constituam as frases exemplo bastou definir cláusulas, para cada uma dessas palavras associando-as ao seu tipo gramatical, depois disso bastou definir clausulas para os tipos de frases que existem na língua portuguesa.
 \subsection{Implementação em Python}
-Em Python a implementação da gramática foi um pouco mais complicada, no entanto os princípios foram os mesmos. Definimos uma lista para cada tipo de palavra e armazenámos-las nessa lista. Depois a parte mais complicada desta implementação foi identificar que tipo de frase se tratava, basicamente a solução a este problema foi efetuar uma função para cada tipo de frase, e testar em cada uma se um determinado segmento se identificava nessa definição. 
-\subsection{Comparação de implementações}
-Entre as duas implementações é que graças a existência de DCG em ProLog, combinado com o dfs embutido do pro log tornou o cóDIGO muito mais legivel do que o de python.
+Em Python a implementação da gramática foi um pouco mais complicada, no entanto os princípios foram os mesmos. Definimos uma lista para cada tipo de palavra. E organizamos as palavras pelas suas respetivas listas. Com uma função para cada tipo de frase, e implementamos um algoritmo que identifica se um determinado segmento, se encaixa nessa definição associada à função.
+%\subsection{Comparação de implementações}
+%Entre as duas implementações é que graças a existência de DCG em ProLog, combinado com o dfs embutido do pro log tornou o cóDIGO muito mais legível do que o de Python.
 \section{Conclusão}
-Durante o trabalho ficou evidente que para determinado tipo de problemas, uma linguagem como o ProLog torna-os de simples implementação. Claro que os problemas que foram utilizados neste problema foram estavam especificamente criados para evidenciar esta característica.
+Durante o trabalho ficou evidente que para determinado tipo de problemas, uma linguagem como o ProLog torna simples a implementação. Claro que os problemas que foram utilizados neste problema foram especificamente criados para evidenciar esta característica.
 
-Em termos de programação em si, foi-nos mais dispendioso em termos de tempo a programação em ProLog do que Python, claro que de certeza que se deveu ao tempo de adaptação a um novo paradigma de programação.
+Em termos de programação em si, foi-nos mais despendemos mais  tempo na programação em ProLog do que Python, claro que de certeza que se deveu ao tempo de adaptação a um novo paradigma de programação.
 
 Chegamos assim à conclusão que nenhuma delas é pior que a outra, mas sim aplicam diferentes paradigmas, dando origem a que o programador aplique diferentes abordagens ao mesmo problema, para tirar proveito das suas mais valias.
 
