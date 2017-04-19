@@ -94,9 +94,9 @@ def r_fraseNomial(componentes,tipo,target):
     if tipo[0] == target:
         return 1, 'fraseNominal(nome('+componentes[0]+')'')'
     elif len(componentes) >= 2 and tipo[0] == carta[target][0] and tipo[1] == target:
-        return 2, 'fraseNominal(artigo('+componentes[0]+')nome('+componentes[1]+'))'
+        return 2, 'fraseNominal(artigo('+componentes[0]+'),nome('+componentes[1]+'))'
     elif len(componentes) >= 2 and tipo[0] == carta[target][1] and tipo[1] == target:
-        return 2, 'fraseNominal(contracao(' + componentes[0] + ')nome(' + componentes[1] + '))'
+        return 2, 'fraseNominal(contracao(' + componentes[0] + '),nome(' + componentes[1] + '))'
     else:
         return 0, None
 
@@ -106,7 +106,7 @@ def frasePreposicional(componentes, tipos):
         num, ret, _ = fraseNomial(componentes[1:],tipos[1:])
         if num == 0:
             raise ValueError('Frase incorreta!')
-        return 1+num, 'frasePreposicional(preposicao('+componentes[0]+')'+ret+')'
+        return 1+num, 'frasePreposicional(preposicao('+componentes[0]+'),'+ret+')'
     else:
         return 0, None
 
@@ -122,11 +122,11 @@ def fraseVerbal(componentes, tipos, type):
         if len(componentes)>1:
             num, ret, _ = fraseNomial(componentes[1:],tipos[1:],flag)
             if num != 0:
-                return 1 + num, 'fraseVerbal(verbo(' + componentes[0] + ')' + ret + ')'
+                return 1 + num, 'fraseVerbal(verbo(' + componentes[0] + '),' + ret + ')'
             else:
                 num, ret = frasePreposicional(componentes[1:], tipos[1:])
                 if num != 0:
-                    return 1+num, 'fraseVerbal(verbo(' + componentes[0] + ')'+ret+')'
+                    return 1+num, 'fraseVerbal(verbo(' + componentes[0] + '),'+ret+')'
                 else:
                     return 1, 'fraseVerbal(verbo('+componentes[0]+'))'
         else:
