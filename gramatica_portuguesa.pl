@@ -68,7 +68,7 @@ nome_m(nome(vento)) --> [vento].
 nome_m(nome(martelo)) --> [martelo].
 nome_m(nome(tambor)) --> [tambor].
 nome_m(nome(tempo)) --> [tempo].
-nome_m(nome(rosto)) --> [rosto]
+nome_m(nome(rosto)) --> [rosto].
 
 %nome femenino
 nome_f(nome(menina)) --> [menina].
