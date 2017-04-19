@@ -1,24 +1,39 @@
 % !TeX spellcheck = pt_PT
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper]{article}
 \usepackage[portuguese]{babel}
 \usepackage[utf8]{inputenc} 
+\usepackage{natbib}
 \author{André Cirne e José Sousa}
 \title{Comparação de Prolog com outras linguagens}
-
 \begin{document}
-\maketitle
+
+%pagina de rosto
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Faculdade de Ciências \par}
+	\vspace{1cm}
+	{\scshape\Large Inteligência Artificial\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Trabalho 3\par}
+	\vspace{2cm}
+	{\Large\itshape André Cirne e José Sousa\par}
+	\vfill
+
+	{\large \today\par}
+\end{titlepage}
+
 \tableofcontents
 \section{Introdução}
-A programação em lógica leva-nos a uma abordagem diferente aos problemas. Por norma numa linguagem imperativa ou orientada ao objeto é necessário pensar passo por passo como resolver, já em programação lógica, não é necessário ter essa abordagem mas sim conseguirmos definir todos os factos e regras que se relacionam com o problema.
+A programação em lógica leva-nos a uma abordagem diferente, quando comparada com linguagens mais imperativas. Por norma numa linguagem imperativa é necessário pensar passo por passo, como resolver o problema, já em programação lógica, não é necessário ter essa abordagem mas sim conseguirmos definir todos os factos e regras que se relacionam com o problema. A própria linguagem efectuará uma busca exaustiva até que encontre uma resposta que satisfaça a a questão efectuada[1].
 
-Neste relatório iremos abordar duas linguagens como representantes de paradigmas diferentes, \textit{Prolog} e \textit{Python}. Prolog como linguagem de paradigma lógico e Python com uma linguagem orientada.
+Neste relatório iremos abordar duas linguagens como representantes de paradigmas diferentes, \textit{Prolog} e \textit{Python}. Prolog como linguagem de paradigma lógico e Python com uma linguagem imperativa.
 
-A programação en ProLog baseia-se na utilização de perguntas, que incidem nos factos e regras que foram anteriormente definidos. O Prolog aplica uma prova lógica na tentativa
+A programação em Prolog baseia-se na utilização de perguntas com fundamento lógico, que incidem nos factos e regras que foram anteriormente definidos. O Prolog depois de ef
 \section{Planeamento de viagens}
 No problema de planeamento de viagens foi necessário implementar uma resposta a três problemas diferentes. Com base numa base de dados com os voos entre os vários aeroportos, o nosso programa deveria responder aos seguintes problemas: 
 \begin{itemize}
  \item Conseguir dizer em que dias é que existem ligações diretas entre dois aeroportos;
- \item Conseguir dizer em que dias é que existem ligações diretas entre dois aeroportos, conseguir dizer quais são os voos que temos de apanhar num determinado dia para conseguir ir de um aeroporto para outro, sendo que não seja necessário existir uma ligação direta e que exista um tempo para transferência entre voos de pelo menos 40 minutos;
+ \item Conseguir dizer quais são os voos que temos de apanhar num determinado dia para conseguir ir de um aeroporto para outro, sendo que não seja necessário existir uma ligação direta e que exista um tempo para transferência entre voos de pelo menos 40 minutos;
  \item Planear uma percurso com inicio e fim na mesma cidade, é necessário que nessa rota passemos por determinados pontos mo entanto, só podemos apanhar um voo por dia, a data de inicio e fim do percurso é dado pelo utilizador.   
 \end{itemize}
 
@@ -33,22 +48,27 @@ O predicado percurso/5 permite-nos planear um percurso ao longo de vários locai
 \subsection{Implementação em Python}
 Ao contrário da implementação anterior onde o os predicados dados são interpretados sem qualquer adaptação pelo programa, na implementação deste problema em Python, foi necessário por um lado criar uma estrutura de dados para armazenar a informação e por outro lado criar um \textit{parser} para interpretação dos predicados dados inicialmente.
 
-A interpretação destes predicados é feita através da leitura de um ficheiro que se encontra na pasta do script, este ficheiro é código ProLog simples, que depois de lido é interpretado por um parser construido com base no módulo \textit{pyparsing}. Depois de interpretados os dados são guardados numa árvore que onde se encontram todas as ligações entre aeroportos e os seus respetivos horários.
+A interpretação destes predicados é feita através da leitura de um ficheiro que se encontra na pasta do script, este ficheiro é código ProLog simples, que depois de lido é interpretado por um parser construido com base no módulo \textit{pyparsing}. Depois de interpretados os dados são guardados numa árvore que onde se encontram todas as ligações entre aeroportos e os seus respectivos horários.
 
-Depois dos dados interpretados, para qualquer tipo de query a resposta é efetuar um DFS até encontrar a resposta, com diferentes características dependendo a especificidade do problema, exatamente como o ProLog efetua, claro que no caso do python é implementado pelo programador.
+Depois dos dados interpretados, para qualquer tipo de query a resposta é efetuar um DFS até encontrar a resposta, com diferentes características dependendo a especificidade do problema, exactamente como o ProLog efectua, claro que no caso do python é implementado pelo programador.
 \subsection{Comparação de implementações}
-
-\section{Analisador sintático para Língua Portuguesa}
+%falta acabar
+\section{Analisador sintáctico para Língua Portuguesa}
 O segundo ponto deste trabalho não era um problema em si, mas implementar algo para o qual o ProLog encontra-se nativamente preparado, a criação de uma gramática que conseguisse analisar uma frase em Português e conclui-se a frase se encontrava gramaticalmente correta.
 \subsection{Implementação em Prolog}
 A implementação em ProLog foi simples, depois do levantamento de todas as palavras que constituam as frases exemplo bastou definir cláusulas, para cada uma dessas palavras associando-as ao seu tipo gramatical depois disso bastou definir clausula para os tipos de frases que existem na língua portuguesa.
 \subsection{Implementação em Python}
 Em Python a implementação da gramática foi um pouco mais complicada, no entanto os princípios foram os mesmos. Definimos uma lista para cada tipo de palavra e armazenámos-las nessa lista. Depois a parte mais complicada desta implementação foi identificar que tipo de frase se tratava, basicamente a solução a este problema foi efetuar uma função para cada tipo de frase, e testar em cada uma se um determinado segmento se identificava nessa definição. 
 \subsection{Comparação de implementações}
-
+Entre as duas implementações é que graças a existência de DCG em ProLog, combinado com o dfs embutido do pro log tornou o cóDIGO muito mais legivel do que o de python.
 \section{Conclusão}
 Durante o trabalho ficou evidente que para determinado tipo de problemas, uma linguagem como o ProLog torna-os de simples implementação. Claro que os problemas que foram utilizados neste problema foram estavam especificamente criados para evidenciar esta característica.
+
 Em termos de programação em si, foi-nos mais dispendioso em termos de tempo a programação em ProLog do que Python, claro que de certeza que se deveu ao tempo de adaptação a um novo paradigma de programação.
+
 Chegamos assim à conclusão que nenhuma delas é pior que a outra, mas sim aplicam diferentes paradigmas, dando origem a que o programador aplique diferentes abordagens ao mesmo problema, para tirar proveito das suas mais valias.
+
+\bibliographystyle{ieeetr}
+\bibliography{bibliografia}
 \end{document}
 
