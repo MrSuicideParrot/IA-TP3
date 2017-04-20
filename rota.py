@@ -81,6 +81,7 @@ class Arvore:
             for aux in self.edges[startIndex][endIndex]:
                 if day in aux.dias:
                     resposta = aux.__str__()
+                    break
         except TypeError:
             pass
         if resposta is not None:
@@ -146,7 +147,8 @@ class Arvore:
                         if resultado1 is not None:
                             resultado2 = self.r_roteiro(i,self.arraySubtractor(aerportos,i),fim,self.nextDay(diaInicio),diaFim-1)
                             if resultado2 is not None:
-                                return resultado1.append(resultado2)
+                                resultado1.append(resultado2)
+                                return resultado1
                         self.edgesVeracidade[i] = True
             return self.r_roteiro(start,aerportos,fim,self.nextDay(diaInicio), diaFim)
 
