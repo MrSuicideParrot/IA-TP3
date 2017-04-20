@@ -129,20 +129,20 @@ class Arvore:
         aeroportosNum = [self.dicionario[i] for i in aeroportos]
         startNum = self.dicionario[start]
         self.edgesVeracidade[startNum] = False
-        return self.r_roteiro(startNum,aeroportosNum,startNum,diaInicio,self.counterDay(diaFim))
+        return self.r_roteiro(startNum, aeroportosNum, startNum, diaInicio, self.counterDay(diaInicio, diaFim))
 
     def r_roteiro(self,start,aerportos,fim,diaInicio, diaFim):
         if diaFim <= 0:
-            return  None
+            return None
 
         if not aerportos:
-            return self.search(start,fim,diaInicio,True)
+            return self.search(self.rev_dicionario[start], self.rev_dicionario[fim], diaInicio, True)
         else:
             for i in range(len(self.dicionario)):
                 if self.edgesVeracidade[i]:
                     if i in aerportos:
                         self.edgesVeracidade[i] = False
-                        resultado1 = self.search(start,i,diaInicio,True)
+                        resultado1 = self.search(self.rev_dicionario[start], self.rev_dicionario[i], diaInicio, True)
                         if resultado1 is not None:
                             resultado2 = self.r_roteiro(i,self.arraySubtractor(aerportos,i),fim,self.nextDay(diaInicio),diaFim-1)
                             if resultado2 is not None:
@@ -151,11 +151,14 @@ class Arvore:
             return self.r_roteiro(start,aerportos,fim,self.nextDay(diaInicio), diaFim)
 
     '''Retorna o dia a seguir'''
+
+    @staticmethod
     def nextDay(day):
         dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         return dias[(8+dias.index(day))%7]
 
     '''calcula o número máximo de viagens'''
+    @staticmethod
     def counterDay(dayI, dayF):
         dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         startIndex = dias.index(dayI)
@@ -167,9 +170,12 @@ class Arvore:
         return count
 
     '''Uma copia do array sme um determinado elemento'''
-    def arraySubtractor( array, item):
+
+    @staticmethod
+    def arraySubtractor(array, item):
         aux = copy(array)
-        return aux.remove(item)
+        aux.remove(item)
+        return aux
 
 
 
@@ -222,10 +228,10 @@ def main():
         print(connects.search(day_ini,day_fin,day))
 
     elif opc == 2:
-        cid_ini = input('Insira o aeroporto inicial:')
-        list = input('Insira as varias cidade separadas por espaços')
-        day_ini = input('Insira o dia inicial:')
-        day_fin = input('Insira o dia final:')
+        cid_ini = input('Insira o aeroporto inicial: ')
+        list = input('Insira as varias cidade separadas por espaços: ')
+        day_ini = input('Insira o dia inicial: ')
+        day_fin = input('Insira o dia final: ')
         print(connects.iniciarRoteiro(cid_ini,list.split(),day_ini,day_fin))
 
     elif opc == 3:
