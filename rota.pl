@@ -51,7 +51,7 @@ percurso(CidadeInicial, Pontos, Day1, Day2,[CidadeInicial-Aux:Day1:Flight_num:De
 
 percurso_r(CidadeInicial, [],Target, Day1, Day2,[CidadeInicial-Target:Day1:Flight_num:Dep_time:Arr_time]):-
   verifcaDia(Day1,Day2),
-  flight(CidadeInicial,Target, Day2, Flight_num,Dep_time,Arr_time).
+  flight(CidadeInicial,Target, Day1, Flight_num,Dep_time,Arr_time).
 
 percurso_r(CidadeInicial, Pontos, Target, Day1, Day2,Percurso):-
   member(Aux,Pontos),
@@ -68,10 +68,12 @@ percurso_r(CidadeInicial, Pontos, Target, Day1, Day2,Percurso):-
   percurso_r(CidadeInicial, Pontos, Target, Next, Day2,Percurso).
 
 /*verifcar dia  valido */
-verifcaDia(Day1,Day2):-
-  nth1(Index1,[mo,tu,we,th,fr,sa,su],Day1),
-  nth1(Index2,[mo,tu,we,th,fr,sa,su],Day2),
-  Index1 =< Index2.
+verifcaDia(Day1,Day1):- false.
+verifcaDia(Day1,Day2):- true.
+%verifcaDia(Day1,Day2):-
+%  nth1(Index1,[mo,tu,we,th,fr,sa,su],Day1),
+%  nth1(Index2,[mo,tu,we,th,fr,sa,su],Day2),
+%  Index1 =< Index2.
 
 /*Calculo do dia a seguir */
 nextDay(mo, tu).
