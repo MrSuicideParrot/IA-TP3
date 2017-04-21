@@ -48,7 +48,7 @@ A implementação em Python apresenta um menu que o guia ao longo das queries qu
 Verificar se uma frase encontra-se bem construida de forma a respeitar as regras da gramática portuguesa.
 ###### **_ProLog_**
 ````ProLog
-  sentenca(Resposta, ['O',caçador,correu,pela,floresta], []).
+  sentenca(Resposta, ['O',cacador,correu,pela,floresta], []).
 ````
 ###### **_Python_**
 ````Bash
