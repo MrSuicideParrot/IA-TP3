@@ -46,7 +46,7 @@ frase_prep(frase_prep(Preposi,Frase)) --> prep(Preposi), frase_nom_p(Frase).
 %Verbo singular
 frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom(Resto).
 frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_nom_p(Resto).
-frase_ver_p(frase_ver_p(Verbo,Resto)) --> verbo(Verbo), frase_prep(Resto).
+frase_ver(frase_ver(Verbo,Resto)) --> verbo(Verbo), frase_prep(Resto).
 frase_ver(frase_ver(Verbo)) --> verbo(Verbo).
 
 %Verbo plural
