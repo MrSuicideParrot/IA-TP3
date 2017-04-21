@@ -1,5 +1,5 @@
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
-#import argparse
+from sys import exit
 from copy import copy
 
 class Carreiras:
@@ -33,15 +33,10 @@ class Tempo:
         self.minutos = int(tempo[1])
 
     def transfer(self,t2):
-        t1 = self
-        if t1.horas == t2.horas:
-            return t2.minutos-t1.minutos >= 40
-        if t2.horas-t1.horas <= 1:
-            return (60 - t1.minutos) + t2.minutos >= 40
-        elif 0 >= t2.horas-t1.horas:
-            return False
-        else:
+        if (t2.minutos - self.minutos) + (t2.horas-self.horas)*60 >= 40:
             return True
+        else:
+            return False
 
     def __str__(self):
         return str(self.horas)+':'+str(self.minutos)
@@ -90,26 +85,30 @@ class Arvore:
         if not direct:
             '''Voo indireto usando dfs'''
             self.edgesVeracidade[startIndex] = False
-            return self.dfs(partida=startIndex, destino=endIndex, day=day)
+            self.dfs(partida=startIndex, destino=endIndex, day=day)
+            return None
         else:
             return None
 
     def dfs(self, partida, destino, day, hchegada=None, rota=[]):
         '''Caso de paragem'''
         if partida == destino:
-            return []
+            print(rota)
+            flag = input('Pretende parar?(s/n)')
+            if flag == 'n':
+                pass
+            else:
+                exit()
+        else:
+             for i in range(len(self.dicionario)):
+                if self.edgesVeracidade[i]:
+                    self.edgesVeracidade[i] = False
+                    if self.edges[partida][i] is not None:
+                        for aux in self.edges[partida][i]:
+                            if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
+                                self.dfs(i, destino, day, aux.data_Fim, rota+[self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()])
+                            self.edgesVeracidade[i] = True
 
-        for i in range(len(self.dicionario)):
-            if self.edgesVeracidade[i]:
-                self.edgesVeracidade[i] = False
-                if self.edges[partida][i] is not None:
-                    for aux in self.edges[partida][i]:
-                        if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
-                            resAux=self.dfs(i, destino, day, aux.data_Fim, rota)
-                            if resAux is not None:
-                                return [self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()].append(resAux)
-                self.edgesVeracidade[i] = True
-        return None
 
     '''Efetua consulta na base de dados para saber em que dias e que existem voos diretos'''
     def consulta(self, partida, destino):
@@ -119,10 +118,10 @@ class Arvore:
         usedDays = [False for _ in range(7)]
 
         for aux in self.edges[startIndex][endIndex]:
-            for x in aux:
+            for x in aux.dias:
                 usedDays[dicionarioL.index(x)] = True
 
-        print([dicionarioL[index] for index in range(7) if usedDays[index]])
+        return ([dicionarioL[index] for index in range(7) if usedDays[index]])
 
     '''Roteiro de varios dias'''
     def iniciarRoteiro(self,start, aeroportos, diaInicio, diaFim):
@@ -224,7 +223,7 @@ def main():
     opc = int(input('Selecione o tipo de query que pretende:\n1 - Rota\n2 - Iniciar roteiro\n3 - Todos os dias onde existem voos diretos\n'))
     if opc == 1:
         # search(self, partida, destino, day,
-        day_ini = input('Insira o cidade inicial:')
+        day_ini = input('Insira a cidade inicial:')
         day_fin = input('Insira o cidade final:')
         day = input('Insira o dia onde pretende fazer a query:')
         print(connects.search(day_ini,day_fin,day))
@@ -237,8 +236,8 @@ def main():
         print(connects.iniciarRoteiro(cid_ini,list.split(),day_ini,day_fin))
 
     elif opc == 3:
-        day_ini = input('Insira o dia inicial:')
-        day_fin = input('Insira o dia final:')
+        day_ini = input('Insira a cidade inicial:')
+        day_fin = input('Insira a cidade final:')
         print(connects.consulta(day_ini, day_fin))
 
 
