@@ -44,7 +44,7 @@ class Tempo:
 class Arvore:
     def __init__(self, nos):
 
-        '''Criação de dicionario e organização'''
+        '''Criacao de dicionario e organização'''
         self.dicionario = {}
         posic = 0
         for aux in nos:
@@ -105,9 +105,9 @@ class Arvore:
                     self.edgesVeracidade[i] = False
                     if self.edges[partida][i] is not None:
                         for aux in self.edges[partida][i]:
-                            if day in aux.dias and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
+                            if Arvore.check(day, aux.dias) and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
                                 self.dfs(i, destino, day, aux.data_Fim, rota+[self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()])
-                            self.edgesVeracidade[i] = True
+                    self.edgesVeracidade[i] = True
 
 
     '''Efetua consulta na base de dados para saber em que dias e que existem voos diretos'''
@@ -125,18 +125,21 @@ class Arvore:
 
     '''Roteiro de varios dias'''
     def iniciarRoteiro(self,start, aeroportos, diaInicio, diaFim):
-        '''Tradução de cenas'''
+        '''Traducao de cenas'''
         aeroportosNum = [self.dicionario[i] for i in aeroportos]
         startNum = self.dicionario[start]
         self.edgesVeracidade[startNum] = False
-        return self.r_roteiro(startNum, aeroportosNum, startNum, diaInicio, self.counterDay(diaInicio, diaFim))
+        return self.r_roteiro(startNum, aeroportosNum, startNum, diaInicio, diaFim)
 
-    def r_roteiro(self,start,aerportos,fim,diaInicio, diaFim):
-        if diaFim <= 0:
+    def r_roteiro(self, start, aerportos, fim, diaInicio, diaFim):
+        if (Arvore.counterDay(diaInicio, diaFim)-1) < len(aerportos):
+            return None
+
+        if diaInicio == diaFim:
             return None
 
         if not aerportos:
-            return self.search(self.rev_dicionario[start], self.rev_dicionario[fim], diaInicio, True)
+            return self.search(self.rev_dicionario[start], self.rev_dicionario[fim], diaFim, True)
         else:
             for i in range(len(self.dicionario)):
                 if self.edgesVeracidade[i]:
@@ -144,12 +147,12 @@ class Arvore:
                         self.edgesVeracidade[i] = False
                         resultado1 = self.search(self.rev_dicionario[start], self.rev_dicionario[i], diaInicio, True)
                         if resultado1 is not None:
-                            resultado2 = self.r_roteiro(i,self.arraySubtractor(aerportos,i),fim,self.nextDay(diaInicio),diaFim-1)
+                            resultado2 = self.r_roteiro(i, self.arraySubtractor(aerportos, i), fim, self.nextDay(diaInicio), diaFim)
                             if resultado2 is not None:
                                 resultado1.append(resultado2)
                                 return resultado1
                         self.edgesVeracidade[i] = True
-            return self.r_roteiro(start,aerportos,fim,self.nextDay(diaInicio), diaFim)
+            return self.r_roteiro(start, aerportos, fim, self.nextDay(diaInicio), diaFim)
 
     '''Retorna o dia a seguir'''
 
@@ -168,7 +171,7 @@ class Arvore:
         while startIndex != endIndex:
             startIndex = (8 + startIndex)%7
             count += 1
-        return count
+        return count+1
 
     '''Uma copia do array sme um determinado elemento'''
 
@@ -178,9 +181,12 @@ class Arvore:
         aux.remove(item)
         return aux
 
-
-
-
+    @staticmethod
+    def check(target, lista):
+        for i in lista:
+            if i == target:
+                return True
+        return False
 
 
 def readFile():
@@ -216,7 +222,7 @@ def findIndex(target, array):
     for i in range(len(array)):
         if array[i].partida == target:
             return i
-    raise Exception('Valor não se encontrava no array!')
+    raise Exception('Valor nao se encontrava no array!')
 
 def main():
     connects = Arvore(readFile())
@@ -226,7 +232,7 @@ def main():
         day_ini = input('Insira a cidade inicial:')
         day_fin = input('Insira o cidade final:')
         day = input('Insira o dia onde pretende fazer a query:')
-        print(connects.search(day_ini,day_fin,day))
+        print(connects.search(day_ini, day_fin, day))
 
     elif opc == 2:
         cid_ini = input('Insira o aeroporto inicial: ')
@@ -239,7 +245,6 @@ def main():
         day_ini = input('Insira a cidade inicial:')
         day_fin = input('Insira a cidade final:')
         print(connects.consulta(day_ini, day_fin))
-
 
 
 if __name__ == '__main__':
