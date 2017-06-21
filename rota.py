@@ -1,9 +1,13 @@
+# /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from pyparsing import Word, alphas, Literal, Suppress, Optional, nums, alphanums, OneOrMore
 from sys import exit
 from copy import copy
 
+
 class Carreiras:
-    def __init__(self,data_Inicio, data_Fim, numeroID, dias):
+    def __init__(self, data_Inicio, data_Fim, numeroID, dias):
         diasPars = OneOrMore(Word(alphas) + Optional(Suppress(',')))
         self.data_Inicio = Tempo(data_Inicio)
         self.data_Inicio = Tempo(data_Inicio)
@@ -15,7 +19,7 @@ class Carreiras:
             self.dias = diasPars.parseString(dias)
 
     def __str__(self):
-        return self.numeroID+"["+self.data_Inicio.__str__()+","+self.data_Fim.__str__()+']'
+        return self.numeroID + "[" + self.data_Inicio.__str__() + "," + self.data_Fim.__str__() + ']'
 
 
 class Percursos:
@@ -32,19 +36,20 @@ class Tempo:
         self.horas = int(tempo[0])
         self.minutos = int(tempo[1])
 
-    def transfer(self,t2):
-        if (t2.minutos - self.minutos) + (t2.horas-self.horas)*60 >= 40:
+    def transfer(self, t2):
+        if (t2.minutos - self.minutos) + (t2.horas - self.horas) * 60 >= 40:
             return True
         else:
             return False
 
     def __str__(self):
-        return str(self.horas)+':'+str(self.minutos)
+        return str(self.horas) + ':' + str(self.minutos)
+
 
 class Arvore:
     def __init__(self, nos):
 
-        '''Criacao de dicionario e organização'''
+        """Criacao de dicionario e organização"""
         self.dicionario = {}
         posic = 0
         for aux in nos:
@@ -56,10 +61,11 @@ class Arvore:
                 posic += 1
 
         '''Criacao do dicionario reverso'''
-        self.rev_dicionario = dict((v,k) for k,v in self.dicionario.items())
+        self.rev_dicionario = dict((v, k) for k, v in self.dicionario.items())
 
         self.edges = [[None for _ in range(len(self.dicionario))] for _ in range(len(self.dicionario))]
-        self.edgesVeracidade = [True for _ in range(len(self.dicionario))]  #usra como o valor de True como ainda nao visitado
+        self.edgesVeracidade = [True for _ in
+                                range(len(self.dicionario))]  # usra como o valor de True como ainda nao visitado
 
         for aux in nos:
             posicINI = self.dicionario[aux.partida]
@@ -80,7 +86,7 @@ class Arvore:
         except TypeError:
             pass
         if resposta is not None:
-            return [partida+"-"+destino+":"+resposta]
+            return [partida + "-" + destino + ":" + resposta]
 
         if not direct:
             '''Voo indireto usando dfs'''
@@ -91,7 +97,7 @@ class Arvore:
             return None
 
     def dfs(self, partida, destino, day, hchegada=None, rota=[]):
-        '''Caso de paragem'''
+        """Caso de paragem"""
         if partida == destino:
             print(rota)
             flag = input('Pretende parar?(s/n)')
@@ -100,17 +106,18 @@ class Arvore:
             else:
                 exit()
         else:
-             for i in range(len(self.dicionario)):
+            for i in range(len(self.dicionario)):
                 if self.edgesVeracidade[i]:
                     self.edgesVeracidade[i] = False
                     if self.edges[partida][i] is not None:
                         for aux in self.edges[partida][i]:
                             if Arvore.check(day, aux.dias) and (hchegada is None or hchegada.transfer(aux.data_Inicio)):
-                                self.dfs(i, destino, day, aux.data_Fim, rota+[self.rev_dicionario[partida]+'-'+self.rev_dicionario[i]+':'+aux.__str__()])
+                                self.dfs(i, destino, day, aux.data_Fim, rota + [
+                                    self.rev_dicionario[partida] + '-' + self.rev_dicionario[i] + ':' + aux.__str__()])
                     self.edgesVeracidade[i] = True
 
-
     '''Efetua consulta na base de dados para saber em que dias e que existem voos diretos'''
+
     def consulta(self, partida, destino):
         startIndex = self.dicionario[partida]
         endIndex = self.dicionario[destino]
@@ -124,7 +131,8 @@ class Arvore:
         return ([dicionarioL[index] for index in range(7) if usedDays[index]])
 
     '''Roteiro de varios dias'''
-    def iniciarRoteiro(self,start, aeroportos, diaInicio, diaFim):
+
+    def iniciarRoteiro(self, start, aeroportos, diaInicio, diaFim):
         '''Traducao de cenas'''
         aeroportosNum = [self.dicionario[i] for i in aeroportos]
         startNum = self.dicionario[start]
@@ -132,7 +140,7 @@ class Arvore:
         return self.r_roteiro(startNum, aeroportosNum, startNum, diaInicio, diaFim)
 
     def r_roteiro(self, start, aerportos, fim, diaInicio, diaFim):
-        if (Arvore.counterDay(diaInicio, diaFim)-1) < len(aerportos):
+        if (Arvore.counterDay(diaInicio, diaFim) - 1) < len(aerportos):
             return None
 
         if diaInicio == diaFim:
@@ -147,7 +155,8 @@ class Arvore:
                         self.edgesVeracidade[i] = False
                         resultado1 = self.search(self.rev_dicionario[start], self.rev_dicionario[i], diaInicio, True)
                         if resultado1 is not None:
-                            resultado2 = self.r_roteiro(i, self.arraySubtractor(aerportos, i), fim, self.nextDay(diaInicio), diaFim)
+                            resultado2 = self.r_roteiro(i, self.arraySubtractor(aerportos, i), fim,
+                                                        self.nextDay(diaInicio), diaFim)
                             if resultado2 is not None:
                                 resultado1.append(resultado2)
                                 return resultado1
@@ -159,9 +168,10 @@ class Arvore:
     @staticmethod
     def nextDay(day):
         dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
-        return dias[(8+dias.index(day))%7]
+        return dias[(8 + dias.index(day)) % 7]
 
     '''calcula o número máximo de viagens'''
+
     @staticmethod
     def counterDay(dayI, dayF):
         dias = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
@@ -169,9 +179,9 @@ class Arvore:
         endIndex = dias.index(dayF)
         count = 0
         while startIndex != endIndex:
-            startIndex = (8 + startIndex)%7
+            startIndex = (8 + startIndex) % 7
             count += 1
-        return count+1
+        return count + 1
 
     '''Uma copia do array sme um determinado elemento'''
 
@@ -193,12 +203,14 @@ def readFile():
     tempo = []
     ''' READING FILE'''
     fd = open('times.pl', 'r')
-    buffer=fd.read().split('\n')
+    buffer = fd.read().split('\n')
     '''Parsing lines'''
 
     '''Diferentes tipos de parsers'''
-    firstLine = Literal('timetable') + Suppress('(') + Word(alphas) +Suppress(',') + Word(alphas) + Suppress(',')
-    carreiraLine = Optional(Suppress('[')) + Word(nums+':'+nums) + Suppress('/') + Word(nums+':'+nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (Suppress('[')+OneOrMore(Word(alphas+',')^Word(alphas))+Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
+    firstLine = Literal('timetable') + Suppress('(') + Word(alphas) + Suppress(',') + Word(alphas) + Suppress(',')
+    carreiraLine = Optional(Suppress('[')) + Word(nums + ':' + nums) + Suppress('/') + Word(
+        nums + ':' + nums) + Suppress('/') + Word(alphanums) + Suppress('/') + (Literal('alldays') ^ (
+    Suppress('[') + OneOrMore(Word(alphas + ',') ^ Word(alphas)) + Suppress(']'))) + (Suppress(']).') ^ Suppress(','))
 
     '''Inicio de parser'''
     i = 0
@@ -208,7 +220,7 @@ def readFile():
         tempo.append(Percursos(aux[1], aux[2]))
         del buffer[0]
         while not buffer[0] == '':
-            buffer[0] = buffer[0].replace(' ','')
+            buffer[0] = buffer[0].replace(' ', '')
             aux = carreiraLine.parseString(buffer[0])
             tempo[index_tempo].viagens.append(Carreiras(*aux))
             del buffer[0]
@@ -224,9 +236,11 @@ def findIndex(target, array):
             return i
     raise Exception('Valor nao se encontrava no array!')
 
+
 def main():
     connects = Arvore(readFile())
-    opc = int(input('Selecione o tipo de query que pretende:\n1 - Rota\n2 - Iniciar roteiro\n3 - Todos os dias onde existem voos diretos\n'))
+    opc = int(input(
+        'Selecione o tipo de query que pretende:\n1 - Rota\n2 - Iniciar roteiro\n3 - Todos os dias onde existem voos diretos\n'))
     if opc == 1:
         # search(self, partida, destino, day,
         day_ini = input('Insira a cidade inicial:')
@@ -239,7 +253,7 @@ def main():
         list = input('Insira as varias cidade separadas por espaços: ')
         day_ini = input('Insira o dia inicial: ')
         day_fin = input('Insira o dia final: ')
-        print(connects.iniciarRoteiro(cid_ini,list.split(),day_ini,day_fin))
+        print(connects.iniciarRoteiro(cid_ini, list.split(), day_ini, day_fin))
 
     elif opc == 3:
         day_ini = input('Insira a cidade inicial:')

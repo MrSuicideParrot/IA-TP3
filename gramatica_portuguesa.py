@@ -1,3 +1,6 @@
+# /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from sys import argv
 
 nomeM = ['cacador', 'cachorro', 'rio', 'mar', 'tempo', 'sino', 'vento', 'martelo', 'tambor', 'tempo','rosto']
