@@ -143,11 +143,11 @@ class Arvore:
         if (Arvore.counterDay(diaInicio, diaFim) - 1) < len(aerportos):
             return None
 
-        if diaInicio == diaFim:
-            return None
-
         if not aerportos:
             return self.search(self.rev_dicionario[start], self.rev_dicionario[fim], diaFim, True)
+
+        if diaInicio == diaFim:
+            return None
         else:
             for i in range(len(self.dicionario)):
                 if self.edgesVeracidade[i]:
